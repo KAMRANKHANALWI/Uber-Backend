@@ -14,12 +14,30 @@ This project is a backend implementation of an Uber-like ride-booking applicatio
   - Driver accepts the ride.
   - Payment is processed using an integrated wallet system.
   
+- **Ride Status Management:**
+  - Tracks ride progress through statuses such as `STARTED`, `ONGOING`, `COMPLETED`, and `CANCELLED`.
+  - Managed using enums to maintain clear ride state transitions.
+  
 - **Admin Panel:**
   - Provides control over riders and drivers.
   - View and manage rides and payments.
+  - Role-based access control (RBAC) using roles like `ADMIN`, `RIDER`, and `DRIVER`.
+  - Secure access for admin users with elevated privileges.
 
-- **RESTful APIs:**
-  - OpenAPI documentation is provided for easy API testing and integration.
+- **Payment System:**
+  - Supports multiple payment methods such as `CASH` and `WALLET`.
+  - Payment processing implemented using the **Strategy Design Pattern**.
+  - Payment tracking and status updates.
+
+- **Logging Mechanism:**
+  - Application-wide logging using SLF4J for debugging and monitoring.
+
+- **Email Notification System:**
+  - Automated email notifications sent to users for ride confirmations, cancellations, and payment receipts.
+  - Implemented using Spring Boot's email capabilities via `JavaMailSender`.
+
+- **RESTful APIs with OpenAPI Documentation:**
+  - API documentation available at `http://localhost:8080/swagger-ui/index.html` for easy testing and integration.
 
 - **Database Integration:**
   - PostgreSQL used for data persistence.
@@ -49,8 +67,14 @@ The project incorporates the following key Spring Boot concepts:
 6. **Hibernate Spatial:**
    - Handle geolocation-based queries efficiently.
 
-7. **Exception Handling:**
+7. **Spring Boot Email:**
+   - Send transactional emails using `JavaMailSender`.
+
+8. **Exception Handling:**
    - Implemented using `@ControllerAdvice` for centralized exception management.
+
+9. **Logging:**
+   - Implemented using SLF4J to log key actions and errors for better tracking.
 
 ---
 
@@ -63,6 +87,8 @@ The project incorporates the following key Spring Boot concepts:
 2. **Driver:** Stores driver profile, availability status, and vehicle details.
 3. **Ride:** Tracks ride requests, status, and payment details.
 4. **Wallet:** Handles balance and transaction history.
+5. **User:** Manages login credentials and roles (Admin, Rider, Driver).
+6. **Payment:** Handles multiple payment methods and tracks transactions.
 
 ### **Flow of the Backend System**
 
@@ -78,12 +104,17 @@ The project incorporates the following key Spring Boot concepts:
    - Driver accepts the ride request.
    - Ride status is updated in the database.
 
-4. **Payment Handling:**
+4. **Ride Status Updates:**
+   - As the ride progresses, statuses are updated from `STARTED` to `ONGOING` and eventually `COMPLETED` or `CANCELLED`.
+   - Ride status transitions are handled within the business logic.
+
+5. **Payment Handling:**
    - Rider's wallet balance is deducted.
    - Payment records are stored.
 
-5. **Admin Monitoring:**
-   - Admin can view all ride and payment details via API.
+6. **Admin Monitoring:**
+   - Admin can view and manage all ride and payment details.
+   - Admin has elevated privileges for managing users and ride data.
 
 ---
 
@@ -91,9 +122,13 @@ The project incorporates the following key Spring Boot concepts:
 
 1. **Strategy Design Pattern:**
    - Used to dynamically select the best ride-matching algorithm based on factors like driver availability, distance, and rider preferences.
+   - Also used for payment processing to support multiple payment methods.
 
 2. **Singleton Pattern:**
    - Ensures a single instance of services like ride-matching and payment processing.
+
+3. **Factory Pattern:**
+   - Used to instantiate JWT services and location utilities dynamically.
 
 ---
 
@@ -107,7 +142,7 @@ The project incorporates the following key Spring Boot concepts:
 ### **Installation Steps**
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/uber-backend.git
+   git clone https://github.com/KAMRANKHANALWI/Uber-Backend.git
    ```
 2. Configure database settings in `application.properties`:
    ```properties
